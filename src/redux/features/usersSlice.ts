@@ -1,20 +1,38 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-type CounterState = {
-    value: number;
-  };
-  
-  const initialState = {
-    value: 0,
-  } 
-  export const userSlice = createSlice({
-    name: "user",
-    initialState,
-    reducers: {
-      incrementByAmount: (state, action: PayloadAction<number>) => {
-        state.value += action.payload;
-      }
-    },
-  });
-  
-  export const {incrementByAmount} = userSlice.actions;
-  export default userSlice.reducer;
+interface AuthTypes {
+    id: string;
+    email:string;
+    password: string;
+    __v: number;
+}
+export interface AuthState {
+    user: AuthTypes,
+    token: string | null
+
+}
+const initialState = {
+    user: {id:'', email:'', password:'', __v: 0},
+    token: null
+
+}
+export const AuthSlice = createSlice({
+        name: 'auth',
+        initialState,
+        reducers: {
+            setCredentials :(state:AuthState,action:PayloadAction<any>) =>{
+                const {name, token} = action.payload
+                state.user = name
+                state.token = token
+                
+    
+            },
+            logOut : (state, action) =>{
+                state.user= {id:'', email:'', password:'', __v: 0}
+            }
+        }
+    })
+    export const {
+        setCredentials
+    } =  AuthSlice.actions;
+    const authReducer = AuthSlice.reducer
+    export { authReducer }
