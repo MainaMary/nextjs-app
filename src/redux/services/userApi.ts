@@ -1,8 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { User } from "@/model/types";
+import { User, Posts } from "@/model/types";
 export const userApi = createApi({
     reducerPath: "userApi",
     refetchOnFocus: true,
+    tagTypes: ["Posts"],
     baseQuery: fetchBaseQuery({
       baseUrl: "https://jsonplaceholder.typicode.com/",
     }),
@@ -13,7 +14,15 @@ export const userApi = createApi({
       getUserById: builder.query<User, { id: string }>({
         query: ({ id }) => `users/${id}`,
       }),
+      getAllPosts:builder.query({
+        query: () =>"posts"
+      }),
+      getAllPhotos:builder.query({
+        query:() =>"photos"
+      })
     }),
   });
   
-  export const { useGetAllUsersQuery, useGetUserByIdQuery } = userApi;
+  export const { useGetAllPhotosQuery,useGetAllUsersQuery, useGetUserByIdQuery, useGetAllPostsQuery } = userApi;
+
+  // https://jsonplaceholder.typicode.com/posts?_limit=10&_page=5
