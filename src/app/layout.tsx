@@ -1,8 +1,8 @@
 import "./globals.css";
-import Link from "next/link";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import AppStoreProvider from "../redux/services/provider";
+import NavBar from "@/components/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,12 +20,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AppStoreProvider>
-          <nav className="flex h-16 items-center px-6 bg-slate-500 justify-between">
-            <Link href="/" className="text-white font-bold">
-              Movies
-            </Link>
-          </nav>
-          {children}
+          <NavBar/>
+          <div className="mx-auto mx-w-screen-2xl px-8 md:px-12">
+            {children}
+          </div>
+         
         </AppStoreProvider>
       </body>
     </html>
