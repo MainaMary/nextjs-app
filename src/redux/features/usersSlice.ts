@@ -1,38 +1,61 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-interface AuthTypes {
-    id: string;
-    email:string;
-    password: string;
-    __v: number;
-}
+import { User } from "@/model/types";
+export const userDetailsKey ="userDetailsKey"
 export interface AuthState {
-    user: AuthTypes,
-    token: string | null
+    user: User,
+   
+
+}
+export const initialUserState =  {
+    id: '',
+    name: '',
+    username: '',
+    email:'',
+    address: {
+        street: '',
+        suite: '',
+        city: '',
+        zipcode: '',
+        geo: {
+            lat: '',
+            lng: ''
+        }
+    },
+    phone: '',
+    website: '',
+    company: {
+        name: '',
+        catchPhrase: '',
+        bs: ''
+    }
 
 }
 const initialState = {
-    user: {id:'', email:'', password:'', __v: 0},
-    token: null
-
+    user: localStorage.getItem(userDetailsKey)
+    ? JSON.parse(localStorage.getItem(userDetailsKey) || '')
+    : initialUserState
+   
 }
+
 export const AuthSlice = createSlice({
         name: 'auth',
         initialState,
         reducers: {
             setCredentials :(state:AuthState,action:PayloadAction<any>) =>{
-                const {name, token} = action.payload
-                state.user = name
-                state.token = token
                 
+                state.user = action.payload
+               
+                localStorage.setItem(userDetailsKey, JSON.stringify(state.user))
     
             },
             logOut : (state, action) =>{
-                state.user= {id:'', email:'', password:'', __v: 0}
+                state.user= state.user
             }
         }
     })
     export const {
-        setCredentials
+        setCredentials,
+        logOut
     } =  AuthSlice.actions;
     const authReducer = AuthSlice.reducer
     export { authReducer }
