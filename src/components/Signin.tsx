@@ -1,10 +1,19 @@
-import { useReducer, useState } from "react"
+import { useReducer, useState, useEffect } from "react"
 import {AiFillEyeInvisible,AiFillEye} from "react-icons/ai"
-import { ActionTypes } from "@/model/types"
+import { useRouter } from "next/navigation"
+
+
+import { ActionTypes, User} from "@/model/types"
 import { formReducer } from "@/reducer/formReducer"
 import Label from "./Label"
 import Input from "./Input"
 import useVisibleHook from "@/customhooks/useVisibleHook"
+import { useGetAllUsersQuery } from "@/redux/services/userApi"
+import { useAppDispatch } from "@/redux/hooks"
+import { setCredentials } from "@/redux/features/usersSlice"
+
+
+
 export default function Signin(){
     const initialState = {
         email: '',
@@ -13,6 +22,10 @@ export default function Signin(){
       const [state, dispatch]:any = useReducer<any>(formReducer, initialState)
       const [error,setError] = useState<string>('')
       const {visible, handleVisible} = useVisibleHook()
+      const {data ,isLoading, isFetching} = useGetAllUsersQuery(null)
+     
+      const router = useRouter()
+    
       const handleInputChange= (event:any)=>{
         const {name, value} = event.target
         setError('')
@@ -21,9 +34,24 @@ export default function Signin(){
           payload: { key: [name], value: value },
         })
       }
+      const dispatchUser = useAppDispatch()
       const {email, password} = state
+     
     const handleSubmit = (e:React.SyntheticEvent) =>{
         e.preventDefault()
+        if(!password || !email){
+          setError('Please submit all details')
+        }
+        if(data && data.length > 0){
+          const currentLoggedInUser = data?.find(user => user.email === email)
+          if(currentLoggedInUser){
+            dispatchUser(setCredentials(currentLoggedInUser))
+            router.push('/');
+          }else{
+            setError('Please submit correct credentials')
+          }
+        }
+        
 
     }
     return (
