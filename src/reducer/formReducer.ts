@@ -16,7 +16,7 @@ const initialState = {
 export const formReducer = (state:initialStateType, action:Props) => {
     const {type, payload} = action
     switch (type) {
-      case ActionTypes.textInput:
+      case ActionTypes.registerText:
         return {
           ...state,
           [payload.key]: payload.value,
