@@ -2,13 +2,13 @@
 
 
 import { Posts } from '@/model/types';
-import { useGetAllPhotosQuery, useGetAllPostsQuery } from '@/redux/services/userApi'
+import { useGetAllPhotosQuery, useGetAllPostsQuery } from '@/redux/services/postApi'
 import PostCard from '@/components/postcard';
 
 export default function Home() {
   const { isLoading, isFetching, data, error } =useGetAllPostsQuery('posts');
   const {data:allphotos} = useGetAllPhotosQuery('photos')
-  console.log(allphotos?.slice(0,100))
+  console.log(allphotos?.slice(0,10))
   return (
   <div> 
     <h2 className='my-8 text-center text-2xl font-bold text-gray-800 md:mb-6 lg:text-3xl'>Posts</h2>
@@ -19,7 +19,7 @@ export default function Home() {
       ))
       
     ) : allphotos?.length && data?.length ? (
-      data.map((post: Posts, index: number) => (
+      data?.slice(0,10).map((post: Posts, index: number) => (
         <PostCard photos={allphotos[index]} key={post.id} post={post}  />
       ))
     ) : (
