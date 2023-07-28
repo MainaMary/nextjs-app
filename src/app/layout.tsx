@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import AppStoreProvider from "../redux/services/provider";
 import NavBar from "@/components/Navbar";
+import { ToastContainer } from 'react-toastify';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AppStoreProvider>
+        <ToastContainer/>
           <NavBar/>
           <div className="mx-auto mx-w-screen-2xl px-8 md:px-12">
             {children}
