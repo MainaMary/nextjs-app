@@ -1,8 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "@/model/types";
 export const userDetailsKey ="userDetailsKey"
+interface currentUserType{
+    message:string, token:string
+}
 export interface AuthState {
     user: User,
+    signedUser: currentUserType
    
 
 }
@@ -30,10 +34,15 @@ export const initialUserState =  {
     }
 
 }
+
 const initialState = {
-    user: localStorage.getItem(userDetailsKey)
-    ? JSON.parse(localStorage.getItem(userDetailsKey) || '')
-    : initialUserState
+    // user: localStorage.getItem(userDetailsKey) ? JSON.parse(localStorage.getItem(userDetailsKey) || '')
+    // : initialUserState
+    user:initialUserState,
+    signedUser:{
+        message:"",
+        token:""
+    }
    
 }
 
@@ -41,12 +50,16 @@ export const AuthSlice = createSlice({
         name: 'auth',
         initialState,
         reducers: {
-            setCredentials :(state:AuthState,action:PayloadAction<any>) =>{
+            setCredentials :(state:AuthState,action:PayloadAction<User>) =>{
                 
                 state.user = action.payload
                
-                localStorage.setItem(userDetailsKey, JSON.stringify(state.user))
+                
     
+            },
+            setCurrentUser:(state:AuthState,action:PayloadAction<currentUserType>)=>{
+             state.signedUser = action.payload
+             localStorage.setItem(userDetailsKey, JSON.stringify(state.signedUser.token))
             },
             logOut : (state, action) =>{
                 state.user= state.user
@@ -55,7 +68,8 @@ export const AuthSlice = createSlice({
     })
     export const {
         setCredentials,
-        logOut
+        logOut,
+        setCurrentUser
     } =  AuthSlice.actions;
     const authReducer = AuthSlice.reducer
     export { authReducer }
