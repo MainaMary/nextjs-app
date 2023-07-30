@@ -56,6 +56,7 @@ export default function Signin({userExist}:AuthProps){
           console.log(response.data)
           if(response.data){
             toast.info('Registration successful')
+            router.push('/');
           }
           if(response?.error){
             setError(response?.error?.data?.message)
@@ -65,13 +66,12 @@ export default function Signin({userExist}:AuthProps){
           const response:any = await loginUser(payload)
           if(response.data){
             toast.info('Login successful')
+            router.push('/');
           }
           if(response?.error){
             setError(response?.error?.data?.message)
           }
         }
-        
-        
         // if(data && data.length > 0){
         //   const currentLoggedInUser = data?.find(user => user.email === email)
         //   if(currentLoggedInUser){
@@ -81,14 +81,10 @@ export default function Signin({userExist}:AuthProps){
         //     setError('Please submit correct credentials')
         //   }
         // }
-        
-
     }
-    
     useEffect(()=>{
       if(isSuccessRegister){
-
-        toast.info("User registered successfully");
+      toast.info("User registered successfully");
       }
       if(isSuccessLogin){
 
