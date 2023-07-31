@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 export type CounterState = {
   value: number;
 };
@@ -85,6 +86,35 @@ export interface ResponseProp {
     },
     message:string;
   }
+}
+export interface SinglePostProps {
+  body :string,
+  createdAt: string,
+  title: string,
+  updatedAt: string,
+  userId: string,
+  _v:number,
+  _id:string
+}
+export interface ModalProps {
+  children: ReactNode;
+}
+export interface Title{
+  children:string
+}
+export interface BtnProps {
+  name?:string ;
+  icon?: ReactNode;
+  onClick?:(x:any)=>void;
+  type?: "button" | "submit" | "reset";
+  children?: string | ReactNode,
+  disabled?: boolean;
+  className?: string;
+}
+export interface MProps {
+  openModal: boolean;
+  handleModal : () => void;
+ 
 }
 export interface SinglePostProps {
   body :string,
