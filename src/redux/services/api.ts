@@ -21,7 +21,7 @@ export const api = createApi({
                 body:payload
             })
         }),
-      getAllPosts: builder.query({
+      getPosts: builder.query({
         query: () => "post",
         providesTags: ["Posts"],
       }),
@@ -56,4 +56,4 @@ export const api = createApi({
       })
     }),
   });
-  export const {useLoginUserMutation, useRegisterUserMutation, useGetAllPostsQuery, useGetSinglePostQuery, useAddPostMutation, useDeletePostMutation, useUpdatePostMutation} = api
+  export const {useLoginUserMutation, useRegisterUserMutation, useGetPostsQuery, useGetSinglePostQuery, useAddPostMutation, useDeletePostMutation, useUpdatePostMutation} = api
