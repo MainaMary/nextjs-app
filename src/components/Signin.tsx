@@ -33,7 +33,7 @@ export default function Signin({userExist}:AuthProps){
       const router = useRouter()
       const [loginUser,{isLoading:isLoadingUser, isSuccess:isSuccessLogin, data:loginResponse}] = useLoginUserMutation()
       const [registerUser,{isLoading:isRegisteringUser, isSuccess:isSuccessRegister}] = useRegisterUserMutation()
-      const handleInputChange= (event:any)=>{
+      const handleInputChange= ( event: React.ChangeEvent<HTMLInputElement>)=>{
         const {name, value} = event.target
         setError('')
         dispatch({
