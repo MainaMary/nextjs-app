@@ -4,18 +4,22 @@ import Button from "./Button"
 import { useAppSelector } from "@/redux/hooks"
 import { useDeletePostMutation } from "@/redux/services/api"
 import { toast } from "react-toastify"
-export default function ConfirmModal(){
-const {showModal, setShowModal}= useModal()
+import { MProps } from "@/model/types"
+export default function ConfirmModal(props:MProps){
+const {handleModal} =props
+
 const [deletePost] = useDeletePostMutation();
 const {postId} = useAppSelector(state =>state.post)
-const handleModal = () =>{
- setShowModal(false)
-}
+
 const handleSubmit = async (e:React.SyntheticEvent) =>{
     e.preventDefault()
-    const res: any = await deletePost(postId);
+    const response: any = await deletePost(postId);
+    if (response.data.status) {
+      toast.info('Post deleted successfully')
+      handleModal()
+     }
 }
-if(!showModal) return null
+
     return  <Modal>
     <form
       onSubmit={handleSubmit}
