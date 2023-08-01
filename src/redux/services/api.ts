@@ -4,7 +4,7 @@ import { PostProps } from "@/model/types";
 export const api = createApi({
     reducerPath: "posts",
     baseQuery: fetchBaseQuery({baseUrl:'http://localhost:5000/'}),
-    tagTypes: ["Posts"],
+    tagTypes: ["Posts","Comment"],
     endpoints: (builder) => ({
         registerUser : builder.mutation({
             query: payload =>({
@@ -53,7 +53,25 @@ export const api = createApi({
            
         }),
         invalidatesTags: ["Posts"],
-      })
+      }),
+      addComment :builder.mutation({
+        query: payload =>({
+            url:'/comment',
+            method: 'POST',
+            body:payload
+        }),
+        invalidatesTags:['Comment']
+    }),
+    getAllPostsComments : builder.query({
+        query:(id) =>`/post-comments/?postId=${id}`,
+        providesTags:["Comment"]
+
+    }),
+    deleteComment: builder.mutation({
+        query:(id) =>`/comment/${id}`,
+        invalidatesTags:["Comment"]
+
+    })
     }),
   });
-  export const {useLoginUserMutation, useRegisterUserMutation, useGetPostsQuery, useGetSinglePostQuery, useAddPostMutation, useDeletePostMutation, useUpdatePostMutation} = api
+  export const {useLoginUserMutation, useRegisterUserMutation, useGetPostsQuery, useGetSinglePostQuery, useAddPostMutation, useDeletePostMutation, useUpdatePostMutation,useAddCommentMutation, useGetAllPostsCommentsQuery, useDeleteCommentMutation} = api
