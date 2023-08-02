@@ -12,6 +12,7 @@ export default function Feed() {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const { data, isLoading: isLoadingPosts } = useGetPostsQuery("");
   console.log(data);
+
   const dispatch = useAppDispatch()
   const handleModal = () => {
     setOpenModal((prev) => !prev);
@@ -19,6 +20,8 @@ export default function Feed() {
     dispatch(setPostId(''))
   };
   console.log(data?.data?.length);
+  const filteredPosts = data?.data?.map((post: SinglePostProps) => post._id);
+  console.log(filteredPosts);
   return (
     <div>
       <div className="flex justify-between ">
@@ -33,8 +36,8 @@ export default function Feed() {
         <div>
           {data?.data?.length > 0 ? (
             <div className="gap-4 grid sm:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-8">
-              {data?.data?.map((post: SinglePostProps) => (
-                <FeedCard key={post._id} post={post} />
+              {data?.data?.map((post: SinglePostProps, index:number) => (
+                <FeedCard key={index} post={post}  />
               ))}
             </div>
           ) : (
