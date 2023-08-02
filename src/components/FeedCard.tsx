@@ -8,8 +8,13 @@ import { setPostId, setEdit } from "@/redux/features/postSlice";
 import ConfirmModal from "./ConfirmModal";
 import AddPost from "./AddPost";
 import { useAppSelector } from "@/redux/hooks";
+import { useRouter } from "next/navigation"
 import Modal from "./Modal";
-import { useAddCommentMutation, useGetAllPostsCommentsQuery } from "@/redux/services/api";
+import {
+  useAddCommentMutation,
+  useGetAllPostsCommentsQuery,
+  useGetPostsQuery
+} from "@/redux/services/api";
 interface Props {
   post: SinglePostProps;
 }
@@ -19,8 +24,9 @@ export default function FeedCard({ post }: Props) {
   const [comment, setComment] = useState<string>("");
   const [id, setId] = useState<string>("");
   const dispatch = useAppDispatch();
-  const [addComment,{data, isLoading:isLoadingComment}] = useAddCommentMutation()
-  const {data:allComments} =useGetAllPostsCommentsQuery(id)
+  const router = useRouter()
+  const [addComment, { data, isLoading: isLoadingComment }] = useAddCommentMutation();
+  const { data: allComments } = useGetAllPostsCommentsQuery(post._id);
   const { isEdit } = useAppSelector((state) => state.post);
   const handleModal = () => {
     setShowModal((prev) => !prev);
@@ -44,18 +50,20 @@ export default function FeedCard({ post }: Props) {
     setId(id);
     const payload = {
       body: comment,
-      name:'testuser',
-      postId:id,
-      email:"test@gmail.com"
+      name: "testuser",
+      postId: id,
+      email: "test@gmail.com",
+    };
+    setComment("");
+    const response = await addComment(payload);
+    if (data?.status) {
+      handleCommentForm();
     }
-    setComment('')
-    const response = await addComment(payload)
-    if(data?.status){
-      handleCommentForm()
-    }
-    console.log({response})
   };
-  console.log({postdata: data})
+  console.log(allComments?.data?.length)
+  const handleNavigate = (id:string) => {
+    router.push(`/feed/${id}`)
+  };
   return (
     <>
       <div className="flex flex-col mt-12 px-3 py-4 overflow-hidden rounded-lg border bg-white">
@@ -68,13 +76,16 @@ export default function FeedCard({ post }: Props) {
           {post.title}
         </p>
         <p className="line-clamp-4 h-[60px]">{`${post.body}`}</p>
-        <p className="cursor-pointer font-semibold text-dark-blue mt-4">
+        <p
+          className="cursor-pointer font-semibold text-dark-blue mt-4"
+          onClick={() =>handleNavigate(post._id)}
+        >
           View post
         </p>
         <div className="flex justify-between w-full mb-2 h-auto items-center">
-         {
-          allComments?.length > 0 &&  <p>{`${allComments?.data?.length} comments`}</p>
-         }
+          {allComments?.data?.length > 0 && (
+            <p>{`${allComments?.data?.length} comments`}</p>
+          )}
           <div
             className="flex h-auto items-center cursor-pointer"
             onClick={() => {
@@ -85,7 +96,7 @@ export default function FeedCard({ post }: Props) {
             <p className="ml-4">comment</p>
           </div>
         </div>
-        {id === post._id &&  isComment && (
+        {id === post._id && isComment && (
           <form
             onSubmit={(e: any) => handleSubmit(e, post._id)}
             className="flex"
