@@ -1,70 +1,49 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "@/model/types";
-export const userDetailsKey = "userDetailsKey";
-interface currentUserType {
-  message: string;
-  token: string;
+
+export interface AuthTypes {
+  id: string;
+  email:string;
+  password: string;
+  __v: number;
 }
 export interface AuthState {
-  user: User;
-  signedUser: currentUserType;
-}
-export const initialUserState = {
-  id: "",
-  name: "",
-  username: "",
-  email: "",
-  address: {
-    street: "",
-    suite: "",
-    city: "",
-    zipcode: "",
-    geo: {
-      lat: "",
-      lng: "",
-    },
-  },
-  phone: "",
-  website: "",
-  company: {
-    name: "",
-    catchPhrase: "",
-    bs: "",
-  },
-};
+  user: AuthTypes,
+  token: string | null,
 
+}
+export const USER ='user'
 const initialState = {
-  // user: localStorage.getItem(userDetailsKey) ? JSON.parse(localStorage.getItem(userDetailsKey) || '')
-  // : initialUserState
-  user: initialUserState,
-  signedUser: {
-    message: "",
-    token: "",
-  },
-};
+  // user: {id:'', email:'', password:'', __v: 0},
+  user: localStorage.getItem(USER)
+  ? JSON.parse(localStorage.getItem(USER) || '{}')
+  : null,
+  token: null
+}
+
+
 
 export const AuthSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
-    setCredentials: (state: AuthState, action: PayloadAction<User>) => {
-      state.user = action.payload;
-    },
-    setCurrentUser: (
-      state: AuthState,
-      action: PayloadAction<currentUserType>
-    ) => {
-      state.signedUser = action.payload;
-      localStorage.setItem(
-        userDetailsKey,
-        JSON.stringify(state.signedUser.token)
-      );
-    },
-    logOut: (state, action) => {
-      state.user = state.user;
-    },
-  },
-});
-export const { setCredentials, logOut, setCurrentUser } = AuthSlice.actions;
-const authReducer = AuthSlice.reducer;
-export { authReducer };
+      setCredentials :(state:AuthState,action:PayloadAction<any>) =>{
+          const {name, token} = action.payload
+          state.user = action.payload
+          localStorage.setItem(USER, JSON.stringify(action.payload))
+          
+
+      },
+      setUserDeatils:() =>{
+
+      },
+      logOut : (state, action) =>{
+          state.user= {id:'', email:'', password:'', __v: 0}
+      }
+  }
+})
+export const {
+  setCredentials
+} =  AuthSlice.actions;
+const authReducer = AuthSlice.reducer
+export { authReducer }
