@@ -16,7 +16,6 @@ import { setCredentials } from "@/redux/features/usersSlice"
 
 import { useLoginUserMutation, useRegisterUserMutation } from "@/redux/services/api"
 import { AuthProps } from "@/model/types"
-import { setCurrentUser } from "@/redux/features/usersSlice"
 
 
 
@@ -54,9 +53,12 @@ export default function Signin({userExist}:AuthProps){
         if(!userExist){
           const response:any = await registerUser(payload)
           console.log(response.data)
+        
           if(response.data){
             toast.info('Registration successful')
+            dispatchUser(setCredentials(response.data.data))
             router.push('/');
+
           }
           if(response?.error){
             setError(response?.error?.data?.message)
