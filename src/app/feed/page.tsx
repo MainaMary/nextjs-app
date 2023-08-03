@@ -1,16 +1,17 @@
 "use client";
 import { useState } from "react";
-import { useGetPostsQuery } from "@/redux/services/api";
+import { useGetPostsByUserQuery } from "@/redux/services/api";
 import AddPost from "@/components/AddPost";
 import Modal from "@/components/Modal";
 import Button from "@/components/Button";
 import FeedCard from "@/components/FeedCard";
 import { SinglePostProps } from "@/model/types";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setEdit, setPostId } from "@/redux/features/postSlice";
 export default function Feed() {
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const { data, isLoading: isLoadingPosts } = useGetPostsQuery("");
+  const{user} = useAppSelector(state =>state.auth)
+  const {data, isLoading} = useGetPostsByUserQuery(user._id)
   console.log(data);
 
   const dispatch = useAppDispatch()
@@ -20,6 +21,7 @@ export default function Feed() {
     dispatch(setPostId(''))
   };
   console.log(data?.data?.length);
+  
   const filteredPosts = data?.data?.map((post: SinglePostProps) => post._id);
   console.log(filteredPosts);
   return (
@@ -30,14 +32,14 @@ export default function Feed() {
         </h2>
         <button onClick={handleModal}>Add post</button>
       </div>
-      {isLoadingPosts ? (
+      {isLoading ? (
         <p>Loading...</p>
       ) : (
         <div>
           {data?.data?.length > 0 ? (
             <div className="gap-4 grid sm:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-8">
               {data?.data?.map((post: SinglePostProps, index:number) => (
-                <FeedCard key={index} post={post}  />
+                <FeedCard key={index} post={post} showComment={false} />
               ))}
             </div>
           ) : (
