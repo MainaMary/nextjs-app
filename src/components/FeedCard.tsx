@@ -8,25 +8,27 @@ import { setPostId, setEdit } from "@/redux/features/postSlice";
 import ConfirmModal from "./ConfirmModal";
 import AddPost from "./AddPost";
 import { useAppSelector } from "@/redux/hooks";
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/navigation";
 import Modal from "./Modal";
 import {
   useAddCommentMutation,
   useGetAllPostsCommentsQuery,
-  useGetPostsQuery
+  useGetPostsQuery,
 } from "@/redux/services/api";
 interface Props {
   post: SinglePostProps;
+  showComment: boolean;
 }
-export default function FeedCard({ post }: Props) {
+export default function FeedCard({ post, showComment }: Props) {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [isComment, setIsComment] = useState<boolean>(false);
   const [comment, setComment] = useState<string>("");
   const [id, setId] = useState<string>("");
   const dispatch = useAppDispatch();
-  const router = useRouter()
-  const [addComment, { data, isLoading: isLoadingComment }] = useAddCommentMutation();
-  const { data: allComments } = useGetAllPostsCommentsQuery(post._id);
+  const router = useRouter();
+  const [addComment, { data, isLoading: isLoadingComment }] =
+    useAddCommentMutation();
+  const { data: allComments } = useGetAllPostsCommentsQuery(showComment && post._id);
   const { isEdit } = useAppSelector((state) => state.post);
   const handleModal = () => {
     setShowModal((prev) => !prev);
@@ -60,9 +62,9 @@ export default function FeedCard({ post }: Props) {
       handleCommentForm();
     }
   };
-  console.log(allComments?.data?.length)
-  const handleNavigate = (id:string) => {
-    router.push(`/feed/${id}`)
+  console.log(allComments?.data?.length);
+  const handleNavigate = (id: string) => {
+    router.push(`/feed/${id}`);
   };
   return (
     <>
@@ -78,25 +80,27 @@ export default function FeedCard({ post }: Props) {
         <p className="line-clamp-4 h-[60px]">{`${post.body}`}</p>
         <p
           className="cursor-pointer font-semibold text-dark-blue mt-4"
-          onClick={() =>handleNavigate(post._id)}
+          onClick={() => handleNavigate(post._id)}
         >
           View post
         </p>
-        <div className="flex justify-between w-full mb-2 h-auto items-center">
-          {allComments?.data?.length > 0 && (
-            <p>{`${allComments?.data?.length} comments`}</p>
-          )}
-          <div
-            className="flex h-auto items-center cursor-pointer"
-            onClick={() => {
-              handleCommentForm(), setId(post._id);
-            }}
-          >
-            <FaCommentAlt className="text-gray-500" />
-            <p className="ml-4">comment</p>
+        {showComment && (
+          <div className="flex justify-between w-full mb-2 h-auto items-center">
+            {allComments?.data?.length > 0 && (
+              <p>{`${allComments?.data?.length} comments`}</p>
+            )}
+            <div
+              className="flex h-auto items-center cursor-pointer"
+              onClick={() => {
+                handleCommentForm(), setId(post._id);
+              }}
+            >
+              <FaCommentAlt className="text-gray-500" />
+              <p className="ml-4">comment</p>
+            </div>
           </div>
-        </div>
-        {id === post._id && isComment && (
+        )}
+        {id === post._id && isComment && showComment && (
           <form
             onSubmit={(e: any) => handleSubmit(e, post._id)}
             className="flex"
@@ -141,7 +145,7 @@ export default function FeedCard({ post }: Props) {
       )}
       {showModal && isEdit && (
         <Modal>
-          <AddPost openModal={showModal} handleModal={handleModal} />
+          <AddPost openModal={showModal} handleModal={handleModal} isUser={showComment}/>
         </Modal>
       )}
     </>
