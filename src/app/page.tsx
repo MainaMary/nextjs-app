@@ -1,14 +1,13 @@
 "use client";
 
 
-import { Posts } from '@/model/types';
-import { useGetAllPhotosQuery, useGetAllPostsQuery } from '@/redux/services/postApi'
-import PostCard from '@/components/postcard';
+import { Posts, SinglePostProps } from '@/model/types';
+import { useGetAllPhotosQuery} from '@/redux/services/postApi'
+import { useGetPostsQuery} from '@/redux/services/api';
+import FeedCard from '@/components/FeedCard';
 
 export default function Home() {
-  const { isLoading, isFetching, data, error } =useGetAllPostsQuery('posts');
-  const {data:allphotos} = useGetAllPhotosQuery('photos')
-  console.log(allphotos?.slice(0,10))
+  const { data, isLoading, isFetching } = useGetPostsQuery("");
   return (
   <div> 
     <h2 className='my-8 text-center text-2xl font-bold text-gray-800 md:mb-6 lg:text-3xl'>Posts</h2>
@@ -18,9 +17,9 @@ export default function Home() {
         <div key={post.id} className='flex flex-col overflow-hidden rounded-lg border bg-white w-[600px] h-[600px]'></div>
       ))
       
-    ) : allphotos?.length && data?.length ? (
-      data?.slice(0,10).map((post: Posts, index: number) => (
-        <PostCard photos={allphotos[index]} key={post.id} post={post}  />
+    ) : data?.data?.length > 0 ? (
+      data?.data?.map((post: SinglePostProps, index: number) => (
+        <FeedCard key={index} post={post}  showComment={true}/>
       ))
     ) : (
       <p>Loading...</p>
