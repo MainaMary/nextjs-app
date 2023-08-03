@@ -114,6 +114,7 @@ export interface BtnProps {
 export interface MProps {
   openModal: boolean;
   handleModal : () => void;
+  isUser?: boolean;
  
 }
 export interface SinglePostProps {
