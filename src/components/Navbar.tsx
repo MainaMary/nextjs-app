@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-import { userDetailsKey, initialUserState } from "@/redux/features/usersSlice";
+import { AuthTypes } from "@/redux/features/usersSlice";
+import { useAppSelector } from "@/redux/hooks";
 import { User } from "@/model/types";
 
 const navLinks = [
@@ -23,11 +24,30 @@ const navLinks = [
   },
 ];
 export default function NavBar() {
-  const [currentUser, setCurrentUser] = useState(initialUserState);
+  const [currentUser, setCurrentUser] = useState(
+    {
+     
+        id: '',
+        email:'',
+        password: '',
+        __v: 0,
+    }
+    
+  );
   useEffect(() => {
-    setCurrentUser(localStorage.getItem(userDetailsKey) as unknown as User);
-  }, [currentUser]);
- 
+    // Use localStorage to retrieve the user data and set the currentUser state.
+    const storedUser = localStorage.getItem('user');
+    const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+    setCurrentUser(parsedUser ?? {
+      _id: '',
+      email: '',
+      password: '',
+      __v: 0,
+    });
+  }, [])
+
+
+
   return (
     <nav className=" top-0 left-0fixed flex w-full h-20 items-center px-12 bg-slate-500 justify-between">
       <Link href="/" className="text-white font-bold">
@@ -41,18 +61,16 @@ export default function NavBar() {
         ))}
       </ul>
       <div>
-      <Link href={"/auth/signin"}>
-            <button>Sign in</button>
-          </Link>
-        {/* {Object?.keys(currentUser).length > 0 ? (
+     
+        {currentUser ? (
           <div>
-            <p className="text-color-400">{currentUser.name}</p>
+            <p className="text-color-400">{currentUser.email}</p>
           </div>
         ) : (
           <Link href={"/auth/signin"}>
             <button>Sign in</button>
           </Link>
-        )} */}
+        )}
       </div>
     </nav>
   );
