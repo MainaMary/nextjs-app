@@ -9,9 +9,10 @@ import Button from "./Button";
 import { toast } from "react-toastify";
 import { useAppSelector } from "@/redux/hooks";
 import useModal from "@/customhooks/useModal";
+import { useGetPostsByUserQuery } from "@/redux/services/api";
 
 const AddPost = (props:MProps) => {
-  const{handleModal} = props
+  const{handleModal,  isUser} = props
   const [formValues, setFormValues] = useState<PostProps>({
     title: "",
     body: "",
@@ -32,8 +33,11 @@ const AddPost = (props:MProps) => {
      };
   const {title,body} = formValues
   const {isEdit, postId} = useAppSelector(state=> state.post)
-  const editedPost = data?.data?.find((post:SinglePostProps) => post._id === postId) as SinglePostProps
-  console.log(data?.data)
+  const {user} = useAppSelector(state=> state.auth)
+  const {data:allUserPosts} = useGetPostsByUserQuery(user._id)
+  const editedPost =  isUser ? data?.data?.find((post:SinglePostProps) => post._id === postId) : allUserPosts?.data?.find((post:SinglePostProps) => post._id === postId)
+
+console.log(postId, isEdit)
   useEffect(() =>{
     if(postId && editedPost){
       const newObj = {
@@ -44,6 +48,7 @@ const AddPost = (props:MProps) => {
       setFormValues({...newObj})
     }
   },[postId, isEdit])
+ 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if(!title || !body){
@@ -52,16 +57,16 @@ const AddPost = (props:MProps) => {
     const payload = {
         body,
         title,
-        userId: String(Math.floor(Math.random() * 100)),
+        userId: user._id,
       };
-      const updatedpayload = {
-        body,
-        title,
-        userId: editedPost.userId,
-        id: editedPost?._id,
-      };
+     
       if (formValues.id) {
-        console.log(formValues?.id);
+        const updatedpayload = {
+          body,
+          title,
+          userId: editedPost?.userId,
+          id: editedPost?._id,
+        };
         const response:any = await updatePost(updatedpayload);
        console.log(response.data.status)
         if (response.data.status) {
