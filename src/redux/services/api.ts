@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { PostProps } from "@/model/types";
+//64cb6c5590cde15731b5ca79
 export const api = createApi({
     reducerPath: "posts",
     baseQuery: fetchBaseQuery({baseUrl:'http://localhost:5000/'}),
@@ -22,7 +23,11 @@ export const api = createApi({
             })
         }),
       getPosts: builder.query({
-        query: () => "post",
+        query: (pageNumber) => `post?page=${pageNumber}`,
+        providesTags: ["Posts"],
+      }),
+      getPostsByUser:builder.query({
+        query:(id) =>`user-posts/?userId=${id}`,
         providesTags: ["Posts"],
       }),
       getSinglePost :builder.query({
@@ -74,4 +79,4 @@ export const api = createApi({
     })
     }),
   });
-  export const {useLoginUserMutation, useRegisterUserMutation, useGetPostsQuery, useGetSinglePostQuery, useAddPostMutation, useDeletePostMutation, useUpdatePostMutation,useAddCommentMutation, useGetAllPostsCommentsQuery, useDeleteCommentMutation} = api
+  export const {useLoginUserMutation,  useGetPostsByUserQuery,useRegisterUserMutation, useGetPostsQuery, useGetSinglePostQuery, useAddPostMutation, useDeletePostMutation, useUpdatePostMutation,useAddCommentMutation, useGetAllPostsCommentsQuery, useDeleteCommentMutation} = api
