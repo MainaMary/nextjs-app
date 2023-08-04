@@ -1,10 +1,20 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { PostProps } from "@/model/types";
+import { TOKEN } from "../features/usersSlice";
 //64cb6c5590cde15731b5ca79
+const getToken = () =>{
+  return localStorage.getItem(TOKEN)
+}
 export const api = createApi({
     reducerPath: "posts",
-    baseQuery: fetchBaseQuery({baseUrl:'http://localhost:5000/'}),
+    baseQuery: fetchBaseQuery({baseUrl:'http://localhost:5000/',
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+      'Content-Type': 'application/json',
+     
+    },
+  }),
     tagTypes: ["Posts","Comment"],
     endpoints: (builder) => ({
         registerUser : builder.mutation({
