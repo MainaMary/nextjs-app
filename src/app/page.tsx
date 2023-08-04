@@ -1,23 +1,30 @@
 "use client";
 
+import { useState } from 'react';
 import {GrFormPrevious,GrFormNext} from "react-icons/gr"
 
-import { useState } from 'react';
+
 
 import { Posts, SinglePostProps } from '@/model/types';
-import { useGetAllPhotosQuery} from '@/redux/services/postApi'
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useGetPostsQuery} from '@/redux/services/api';
 import FeedCard from '@/components/FeedCard';
 import PostPagination from '@/components/PostPagination';
+import { increment, decrement } from '@/redux/features/paginationSlice';
 
 export default function Home() {
-  const[pageNumber, setPageNumber] = useState<number>(1)
+  const dispatch = useAppDispatch()
+  const {pageNumber} = useAppSelector(state =>state.counter)
+  
+
   const handlePageIncrease = () =>{
-    setPageNumber((prev) => prev + 1)
+   dispatch(increment())
+  
   }
   const handlePageDecrease = () =>{
-    setPageNumber((prev) => prev - 1)
+    dispatch(decrement())
   }
+  console.log(pageNumber)
   const { data, isLoading, isFetching } = useGetPostsQuery(pageNumber);
   return (
   <div> 
