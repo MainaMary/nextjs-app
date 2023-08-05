@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 export type CounterState = {
-  value: number;
+  pageNumber: number;
 };
 export interface User{
     id: string,
