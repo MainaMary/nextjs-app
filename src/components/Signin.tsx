@@ -12,7 +12,7 @@ import Input from "./Input"
 import useVisibleHook from "@/customhooks/useVisibleHook"
 import { useGetAllUsersQuery } from "@/redux/services/postApi"
 import { useAppDispatch } from "@/redux/hooks"
-import { setCredentials } from "@/redux/features/usersSlice"
+import { setCredentials ,setUserToken} from "@/redux/features/usersSlice"
 
 import { useLoginUserMutation, useRegisterUserMutation } from "@/redux/services/api"
 import { AuthProps } from "@/model/types"
@@ -52,12 +52,10 @@ export default function Signin({userExist}:AuthProps){
         const payload ={email, password}
         if(!userExist){
           const response:any = await registerUser(payload)
-          console.log(response.data)
-        
           if(response.data){
             toast.info('Registration successful')
             dispatchUser(setCredentials(response.data.data))
-            router.push('/');
+            router.push('/auth/signin');
 
           }
           if(response?.error){
@@ -68,6 +66,8 @@ export default function Signin({userExist}:AuthProps){
           const response:any = await loginUser(payload)
           if(response.data){
             toast.info('Login successful')
+            console.log(response.data,'login')
+            dispatchUser(setUserToken(response.data.token))
             router.push('/');
           }
           if(response?.error){
@@ -89,10 +89,10 @@ export default function Signin({userExist}:AuthProps){
       toast.info("User registered successfully");
       }
       if(isSuccessLogin){
-
+        toast.info("User logged in successfully");
       }
     },[isSuccessRegister, isSuccessLogin])
-    console.log(loginResponse,'login')
+   
     return (
         <div className='w-full md:w-[50%] shadow-lg rounded-2xl flex m-auto bg-white px-8 py-3 items-center justify-center h-auto mt-12'>
         <form className='w-full' onSubmit={handleSubmit}>
