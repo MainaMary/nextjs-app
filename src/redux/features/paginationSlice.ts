@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CounterState } from "@/model/types";
 const initialState = {
-  value: 0,
+  pageNumber: 1,
 } as CounterState;
 
 export const CounterSlice = createSlice({
@@ -9,16 +9,16 @@ export const CounterSlice = createSlice({
   initialState,
   reducers: {
     increment: (state) => {
-      state.value += 1;
+      state.pageNumber+= 1;
     },
     decrement: (state) => {
-      state.value -= 1;
+      state.pageNumber -= 1;
     },
     incrementByAmount: (state, action: PayloadAction<number>) => {
-      state.value += action.payload;
+      state.pageNumber += action.payload;
     },
     decrementByAmount: (state, action: PayloadAction<number>) => {
-      state.value -= action.payload;
+      state.pageNumber -= action.payload;
     },
   },
 });
