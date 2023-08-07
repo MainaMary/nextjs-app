@@ -47,7 +47,7 @@ export default function NavBar() {
   }, [])
 
 
-
+console.log({currentUser})
   return (
     <nav className=" top-0 left-0fixed flex w-full h-20 items-center px-12 bg-slate-500 justify-between">
       <Link href="/" className="text-white font-bold">
