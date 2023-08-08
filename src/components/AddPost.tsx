@@ -9,7 +9,7 @@ import Button from "./Button";
 import { toast } from "react-toastify";
 import { useAppSelector } from "@/redux/hooks";
 import useModal from "@/customhooks/useModal";
-import { useGetPostsByUserQuery } from "@/redux/services/api";
+import { useGetPostsByUserQuery, useGetSinglePostQuery } from "@/redux/services/api";
 
 const AddPost = (props:MProps) => {
   const{handleModal,  isUser} = props
@@ -23,6 +23,7 @@ const AddPost = (props:MProps) => {
   const [updatePost] = useUpdatePostMutation()
   const {data} = useGetPostsQuery('')
   const {setShowModal} = useModal()
+  
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setError('')
@@ -35,19 +36,21 @@ const AddPost = (props:MProps) => {
   const {isEdit, postId} = useAppSelector(state=> state.post)
   const {user} = useAppSelector(state=> state.auth)
   const {data:allUserPosts} = useGetPostsByUserQuery(user._id)
-  const editedPost =  isUser ? data?.data?.find((post:SinglePostProps) => post._id === postId) : allUserPosts?.data?.find((post:SinglePostProps) => post._id === postId)
+  const {data:editedPost, isSuccess} = useGetSinglePostQuery(postId)
+  //const editedPost =  isUser ? data?.data?.find((post:SinglePostProps) => post._id === postId) : allUserPosts?.data?.find((post:SinglePostProps) => post._id === postId)
+   
 
-console.log(postId, isEdit)
   useEffect(() =>{
-    if(postId && editedPost){
+    if(isSuccess){
       const newObj = {
-        title: editedPost.title,
-        body: editedPost.body,
-        id: editedPost._id,
+        title: editedPost.data.title,
+        body: editedPost.data.body,
+        id: editedPost.data._id,
       };
       setFormValues({...newObj})
     }
-  },[postId, isEdit])
+   
+  },[editedPost])
  
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -64,8 +67,8 @@ console.log(postId, isEdit)
         const updatedpayload = {
           body,
           title,
-          userId: editedPost?.userId,
-          id: editedPost?._id,
+          userId: editedPost.data?.userId,
+          id: editedPost?.data?._id,
         };
         const response:any = await updatePost(updatedpayload);
        console.log(response.data.status)
