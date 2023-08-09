@@ -34,6 +34,10 @@ export default function NavBar() {
     }
     
   );
+  const [open, setOpen] = useState(false)
+  const handleOpen = () =>{
+    setOpen(prev =>!prev)
+  }
   useEffect(() => {
     // Use localStorage to retrieve the user data and set the currentUser state.
     const storedUser = localStorage.getItem('user');
@@ -53,7 +57,7 @@ console.log({currentUser})
       <Link href="/" className="text-white font-bold">
         BlogsSite
       </Link>
-      <ul className="flex w-[20%] justify-between">
+      <ul className="flex w-[20%] justify-between md:hide">
         {navLinks.map((list) => (
           <li key={list.id}>
             <Link href={list.path}>{list.label}</Link>
