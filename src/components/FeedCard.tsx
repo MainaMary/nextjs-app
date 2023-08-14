@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaCommentAlt } from "react-icons/fa";
 import { SinglePostProps } from "@/model/types";
 import Input from "./Input";
@@ -15,6 +15,7 @@ import {
   useGetAllPostsCommentsQuery,
   useGetPostsQuery,
 } from "@/redux/services/api";
+import useLocalStorage from "@/customhooks/useLocalStorage";
 interface Props {
   post: SinglePostProps;
   showComment: boolean;
@@ -24,6 +25,7 @@ export default function FeedCard({ post, showComment }: Props) {
   const [isComment, setIsComment] = useState<boolean>(false);
   const [comment, setComment] = useState<string>("");
   const [id, setId] = useState<string>("");
+  const {currentUser} = useLocalStorage()
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [addComment, { data, isLoading: isLoadingComment }] =
@@ -54,7 +56,7 @@ export default function FeedCard({ post, showComment }: Props) {
       body: comment,
       name: "testuser",
       postId: id,
-      email: "test@gmail.com",
+      email: currentUser.email,
     };
     setComment("");
     const response = await addComment(payload);
