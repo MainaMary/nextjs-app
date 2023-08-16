@@ -2,7 +2,6 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { PostProps } from "@/model/types";
 import { TOKEN } from "../features/usersSlice";
-//64cb6c5590cde15731b5ca79
 const getToken = () =>{
   return localStorage.getItem(TOKEN)
 }
@@ -82,6 +81,20 @@ export const api = createApi({
         providesTags:["Comment"]
 
     }),
+    getSingleComment: builder.query({
+      query:(id) => `/comment/${id}`,
+     providesTags:["Comment"]
+
+    }),
+    updateComment : builder.mutation<void, PostProps>({
+      query: ({id,...rest}) =>({
+          url: `/post/${id}`,
+          method:'PUT',
+          body: rest
+
+      }),
+      invalidatesTags: ["Comment"],
+    }),
     deleteComment: builder.mutation({
         query:(id) =>`/comment/${id}`,
         invalidatesTags:["Comment"]
@@ -89,4 +102,4 @@ export const api = createApi({
     })
     }),
   });
-  export const {useLoginUserMutation,  useGetPostsByUserQuery,useRegisterUserMutation, useGetPostsQuery, useGetSinglePostQuery, useAddPostMutation, useDeletePostMutation, useUpdatePostMutation,useAddCommentMutation, useGetAllPostsCommentsQuery, useDeleteCommentMutation} = api
+  export const {useLoginUserMutation,  useGetPostsByUserQuery,useRegisterUserMutation, useGetPostsQuery, useGetSinglePostQuery, useAddPostMutation, useDeletePostMutation, useUpdatePostMutation,useAddCommentMutation, useGetAllPostsCommentsQuery, useDeleteCommentMutation,useGetSingleCommentQuery} = api
