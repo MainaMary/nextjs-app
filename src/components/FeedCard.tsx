@@ -16,6 +16,7 @@ import {
   useGetPostsQuery,
 } from "@/redux/services/api";
 import useLocalStorage from "@/customhooks/useLocalStorage";
+import CommentForm from "./CommentForm";
 interface Props {
   post: SinglePostProps;
   showComment: boolean;
@@ -103,28 +104,7 @@ export default function FeedCard({ post, showComment }: Props) {
           </div>
         )}
         {id === post._id && isComment && showComment && (
-          <form
-            onSubmit={(e: any) => handleSubmit(e, post._id)}
-            className="flex"
-          >
-            <div className="my-4 block md:flex w-full justify-between">
-              {/* <CustomInput
-                        placeholder="e.g Good article"
-                        name="labelId"
-                        onChange={(e: any) => setDataComment((dataComment:any)=> ({...dataComment, [label._id]:e.target.value}))}
-                        type="text"
-                        value={dataComment[label._id]}
-                      /> */}
-              <Input
-                placeholder="e.g Good article"
-                name="comment"
-                onChange={(e: any) => setComment(e.target.value)}
-                type="text"
-                value={comment}
-              />
-              <Button className="md:ml-3">Add</Button>
-            </div>
-          </form>
+          <CommentForm handleCommentForm={handleCommentForm} comment={comment} setComment={setComment} id={id}/>
         )}
         <div className="flex h-auto items-center border-[2px] my-3 border-b border-gray-500"></div>
         <div className="flex justify-between mt-2">
