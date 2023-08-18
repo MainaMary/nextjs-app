@@ -104,7 +104,7 @@ export default function FeedCard({ post, showComment }: Props) {
           </div>
         )}
         {id === post._id && isComment && showComment && (
-          <CommentForm handleCommentForm={handleCommentForm} comment={comment} setComment={setComment} id={id}/>
+          <CommentForm handleCommentForm={handleCommentForm} id={id}/>
         )}
         <div className="flex h-auto items-center border-[2px] my-3 border-b border-gray-500"></div>
         <div className="flex justify-between mt-2">
