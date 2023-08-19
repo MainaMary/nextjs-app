@@ -86,7 +86,7 @@ export const api = createApi({
      providesTags:["Comment"]
 
     }),
-    updateComment : builder.mutation<void, PostProps>({
+    updateComment : builder.mutation<void, any>({
       query: ({id,...rest}) =>({
           url: `/post/${id}`,
           method:'PUT',
@@ -102,4 +102,4 @@ export const api = createApi({
     })
     }),
   });
-  export const {useLoginUserMutation,  useGetPostsByUserQuery,useRegisterUserMutation, useGetPostsQuery, useGetSinglePostQuery, useAddPostMutation, useDeletePostMutation, useUpdatePostMutation,useAddCommentMutation, useGetAllPostsCommentsQuery, useDeleteCommentMutation,useGetSingleCommentQuery} = api
+  export const {useLoginUserMutation,  useGetPostsByUserQuery,useRegisterUserMutation, useGetPostsQuery, useGetSinglePostQuery, useAddPostMutation, useDeletePostMutation, useUpdatePostMutation,useAddCommentMutation, useGetAllPostsCommentsQuery, useDeleteCommentMutation,useGetSingleCommentQuery, useUpdateCommentMutation} = api
