@@ -26,6 +26,9 @@ export default function PostId({ params }: { params: { postId: string } }) {
     handleModal()
 
   }
+  const handleDelete = (id:string) =>{
+    
+  }
   console.log({comments})
   return (
     <div>
@@ -56,7 +59,7 @@ export default function PostId({ params }: { params: { postId: string } }) {
               <button 
               onClick={() => handleEdit(comment._id)}
                >edit</button>
-                            <p>delete</p>
+                            <p onClick={() =>handleDelete(comment._id)}>delete</p>
               </div>}
                
         </div>)}
