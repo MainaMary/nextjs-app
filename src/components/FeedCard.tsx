@@ -26,12 +26,14 @@ export default function FeedCard({ post, showComment }: Props) {
   const [isComment, setIsComment] = useState<boolean>(false);
   const [comment, setComment] = useState<string>("");
   const [id, setId] = useState<string>("");
-  const {currentUser} = useLocalStorage()
+  const { currentUser } = useLocalStorage();
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [addComment, { data, isLoading: isLoadingComment }] =
     useAddCommentMutation();
-  const { data: allComments } = useGetAllPostsCommentsQuery(showComment && post._id);
+  const { data: allComments } = useGetAllPostsCommentsQuery(
+    showComment && post._id
+  );
   const { isEdit } = useAppSelector((state) => state.post);
   const handleModal = () => {
     setShowModal((prev) => !prev);
@@ -104,7 +106,7 @@ export default function FeedCard({ post, showComment }: Props) {
           </div>
         )}
         {id === post._id && isComment && showComment && (
-          <CommentForm handleCommentForm={handleCommentForm} id={id}/>
+          <CommentForm handleCommentForm={handleCommentForm} id={id} />
         )}
         <div className="flex h-auto items-center border-[2px] my-3 border-b border-gray-500"></div>
         <div className="flex justify-between mt-2">
@@ -127,7 +129,11 @@ export default function FeedCard({ post, showComment }: Props) {
       )}
       {showModal && isEdit && (
         <Modal>
-          <AddPost openModal={showModal} handleModal={handleModal} isUser={showComment}/>
+          <AddPost
+            openModal={showModal}
+            handleModal={handleModal}
+            isUser={showComment}
+          />
         </Modal>
       )}
     </>
