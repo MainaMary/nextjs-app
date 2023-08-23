@@ -12,6 +12,7 @@ import { useAppDispatch } from "@/redux/hooks";
 import { setPostId, setEdit } from "@/redux/features/postSlice";
 export default function PostId({ params }: { params: { postId: string } }) {
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
   const handleModal = () => {
     setShowModal((prev) => !prev);
   };
