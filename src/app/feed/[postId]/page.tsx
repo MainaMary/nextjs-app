@@ -10,6 +10,7 @@ import EditComment from "@/components/EditComment";
 import useLocalStorage from "@/customhooks/useLocalStorage";
 import { useAppDispatch } from "@/redux/hooks";
 import { setPostId, setEdit } from "@/redux/features/postSlice";
+import ConfirmModal from "@/components/ConfirmModal";
 export default function PostId({ params }: { params: { postId: string } }) {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -22,6 +23,9 @@ export default function PostId({ params }: { params: { postId: string } }) {
   const { data: comments, isLoading: isLoadingComments } =
     useGetAllPostsCommentsQuery(params.postId);
   const { currentUser } = useLocalStorage();
+  const handleConfirmModal = () => {
+    setOpenModal((prev) => !prev);
+  };
   const handleEdit = (id: string) => {
     dispatch(setPostId(id));
     handleModal();
@@ -29,6 +33,7 @@ export default function PostId({ params }: { params: { postId: string } }) {
   const handleDelete = (id: string) => {
     dispatch(setPostId(id));
     dispatch(setEdit(false));
+    handleConfirmModal();
   };
   console.log({ comments });
   return (
@@ -72,6 +77,9 @@ export default function PostId({ params }: { params: { postId: string } }) {
         )}
       </div>
       {showModal && <EditComment />}
+      {showModal && (
+        <ConfirmModal openModal={openModal} handleModal={handleConfirmModal} />
+      )}
     </div>
   );
 }
